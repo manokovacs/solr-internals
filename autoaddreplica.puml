@@ -1,0 +1,23 @@
+@startuml
+hide footbox
+database "Zookeeper" as zk
+database "NFS" as nfs
+control "Overseer" as os
+participant "S1_R1\n(core1)" as n1
+
+n1->nfs: use dir core1
+n1->zk:register
+activate zk
+n1->n1: goes down
+zk->zk: conn timeout
+deactivate zk
+zk-->os: core1 down
+os->os: wait some...
+create participant "S1_R1\n(core2)" as n2
+os->n2: create \nusing dir core1
+n2->nfs:use dir core1
+note left: Then recovery\n if more reps.
+
+
+
+@enduml

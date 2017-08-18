@@ -1,0 +1,34 @@
+@startuml
+hide footbox
+control "Replica" as replica
+control "Leader" as leader
+database "Zookeeper" as zk
+
+
+replica->zk: Publish DOWN
+replica->replica: Replay tlog
+replica->replica: <b><font color=blue>Compute version
+replica->replica: Start buffering update
+replica->zk: Publish RECOVERING
+replica->leader: Prepare to recovery
+activate leader
+leader->zk: Wait for RECOVERING state
+leader->leader: Turn on update forwarding
+leader-->replica:
+deactivate leader
+group PeerSync
+replica->leader: <b><font color=blue>PeerSync from VER
+leader-->replica: Last 100 updates
+replica->leader: <b><font color=blue>Verify fingerprint
+replica->leader: thanks()
+end
+alt If PeerSync failed
+    replica->leader: Commit
+    replica->leader:Pull segments
+end
+
+
+
+replica->replica: Replay buffer
+replica->zk: publish ACTIVE state
+@enduml
