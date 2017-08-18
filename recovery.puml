@@ -20,7 +20,6 @@ group PeerSync
 replica->leader: <b><font color=blue>PeerSync from VER
 leader-->replica: Last 100 updates
 replica->leader: <b><font color=blue>Verify fingerprint
-replica->leader: thanks()
 end
 alt If PeerSync failed
     replica->leader: Commit
