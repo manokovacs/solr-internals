@@ -10,9 +10,9 @@ activate r1
 r2->r2: Start
 activate r2
 r2->zk: Register seq. ephemeral node
-zk->zk: create znode
+zk->zk: create znode #1
 r1->zk: Register seq. ephemeral node
-zk->zk: create znode
+zk->zk: create znode #2
 r2->zk: read nodes
 r1->zk: read nodes
 zk->r2: Replica 2 is the first
