@@ -1,0 +1,21 @@
+@startuml
+hide footbox
+control "Replica 1" as r1
+control "Replica 2" as r2
+database "Zookeeper" as zk
+
+
+r1->r1: Start
+activate r1
+r2->r2: Start
+activate r2
+r2->zk: Register seq. ephemeral node
+zk->zk: create znode
+r1->zk: Register seq. ephemeral node
+zk->zk: create znode
+r2->zk: read nodes
+r1->zk: read nodes
+zk->r2: Replica 2 is the first
+zk->r1: Replica 2 is the first
+r1->zk: Set watch on Replica 2's node
+@enduml

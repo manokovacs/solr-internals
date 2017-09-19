@@ -1,0 +1,25 @@
+@startuml
+hide footbox
+control "Replica" as replica
+control "Leader" as leader
+database "Zookeeper" as zk
+
+
+replica->zk: Publish ACTIVE
+replica->zk: Register ephemeral node
+leader->replica: update
+leader->replica: update
+leader->replica: update
+leader-x replica: <b><font color=red>update
+leader-x replica: <b><font color=red>update
+leader->zk: Read replica state
+leader<-zk: Replica is ACTIVE
+leader->zk: Overwrite replica state=DOWN
+leader->zk: Set replica LIR state=DOWN
+
+leader-x replica:<font color=red>Request recovery
+leader-x replica:<font color=red>Request recovery
+leader->replica: Request recovery
+replica->replica: Recovery
+
+@enduml

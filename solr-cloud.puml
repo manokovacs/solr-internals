@@ -1,0 +1,31 @@
+@startuml
+
+actor User as user
+'database ZooKeeper as zk
+
+skinparam node {
+	backgroundColor<<leader>> Yellow
+}
+rectangle "Collection 1" {
+    rectangle "Shard 1" {
+        node "Replica 1" as s1r1 <<leader>>
+        node "Replica 2" as s1r2 <<follower>>
+    }
+    rectangle "Shard 2" {
+        node "Replica 2"  as s2r2 <<leader>>
+        node "Replica 1" as s2r1 <<follower>>
+    }
+}
+
+s1r1 ~> s1r2: replicates
+s2r2 ~> s2r1: replicates
+s1r2 --> s2r2: Forwards to shard leader
+
+user-->s1r2: Add doc (any server)
+
+'s1r1-->zk
+'s1r2-->zk
+'s2r1-->zk
+'s2r2-->zk
+
+@enduml
